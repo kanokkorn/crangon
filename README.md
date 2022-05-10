@@ -11,18 +11,18 @@ This project requires seveal libraries for development
 - libopencv4
 - libcppzmq
 - libsqlite3
-- libyaml
+- libjson
 
 ###  Debian-based system
 
 ```bash
-sudo apt install libopencv-dev libzmq3-dev libsqlite3-dev libyaml-dev
+sudo apt install libopencv-dev libzmq3-dev libsqlite3-dev libjson-dev
 ```
 
 ### Arch-based system
 
 ```bash
-sudo pacman -Sy opencv zeromq sqlite libyaml
+sudo pacman -Sy opencv zeromq sqlite libjson
 ```
 
 ## Features
