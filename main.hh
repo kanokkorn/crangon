@@ -1,4 +1,4 @@
-#define __GNU_SOURCE
+#define _POSIX_SOURCE
 
 #ifndef __has_builtin
   #define __has_builtin(x) 0
@@ -14,21 +14,19 @@
 #include <chrono>
 #include <condition_variable>
 
-/* image processing */
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/highgui.hpp>
+/* image process */
+#include "prog.hh"
 
 /* messaging with GUI  */
-#include <zmq.hpp>
+#include "cli.hh"
 
 /* collecting data */
-#include <sqlite3.h>
+#include "sq.hh"
 
-/* offline logging */
+/* logging */
 #include <spdlog/spdlog.h>
 
-/* for setting file in json */
+/* config and data exchange */
 #include <jsoncpp/json/json.h>
 
 typedef struct {
