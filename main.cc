@@ -1,7 +1,13 @@
+/*
+ * File: main.cc
+ * Author: kanokkorn kornkankit <kanokorn@outlook.jp>
+ */
+
 #include "main.hh"
 
 int main(void) {
   signal(SIGINT, sig_handler);
+  signal(SIGTSTP, sig_handler);
   spdlog::info("   ___                             ");
   spdlog::info("  / __|_ _ __ _ _ _  __ _ ___ _ _  ");
   spdlog::info(" | (__| '_/ _` | ' \\/ _` / _ \\ ' \\ ");
@@ -14,6 +20,9 @@ int main(void) {
   Json::Reader reader;
   Json::Value obj;
   reader.parse(ifs, obj);
+  /*
+   * TODO: Generate machine IO with UUID or GUID
+   */
   spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
   if (ifs.fail()) {
     spdlog::critical("error -> exit, config.json not found!");
@@ -30,8 +39,14 @@ int main(void) {
 }
 
 static void sig_handler(int signum) {
-  spdlog::critical("error -> exit, interrupt signal received.\n");
-  exit(signum);
+  if (signum == 2) {
+    spdlog::critical("interrupt received. exit\n");
+    exit(signum);
+  } else if (signum == 20) {
+    spdlog::critical("terminal stop. pausing for 30 sec\n");
+    sleep(30);
+    spdlog::critical("timer expired. countinuing\n");
+  }
 }
 
 static void sys_shutdown(void) {
