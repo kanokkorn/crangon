@@ -1,3 +1,8 @@
+USE_CAM = 0
+USE_VID = 0
+GUI_CLIENT = 0
+SQDB = 0
+
 CXX = clang++
 CXXFLAGS = -std=c++0x -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
