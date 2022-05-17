@@ -1,12 +1,12 @@
-USE_CAM = 0
+DEBUG = 0
 USE_VID = 0
 USE_ZMQ = 0
 USE_SQL = 0
 
 CXX = clang++
-CXXFLAGS = -std=c++0x -Wall -Wextra -fno-common\
+CXXFLAGS = -std=c++14 -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
-					 -pedantic -O3 -g
+					 -pedantic
 LD = -fuse-ld=lld -rtlib=compiler-rt
 LDLIBS = -lm -pthread -ljsoncpp -lspdlog
 OPENCV = $(shell pkg-config --cflags --libs opencv4)
@@ -15,8 +15,8 @@ SRC = $(wildcard *.cc)
 OBJ = $(SRC:.cc=.o)
 BIN = crangon
 
-ifeq ($(USE_CAM), 1)
-	CXXFLAGS += -DUSE_CAM
+ifeq ($(DEBUG), 1)
+	CXXFLAGS += -DDEBUG -O3 -g
 endif
 
 ifeq ($(USE_VID), 1)
@@ -24,7 +24,7 @@ ifeq ($(USE_VID), 1)
 endif
 
 ifeq ($(USE_ZMQ), 1)
-	CXXFLAGS += -DUSE_SRV
+	CXXFLAGS += -DUSE_ZMQ
 	LDLIBS += -lzmq
 endif
 
