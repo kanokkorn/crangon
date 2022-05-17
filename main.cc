@@ -6,6 +6,7 @@
 #include "main.hh"
 
 int main(void) {
+  vid_conf *vidf = new vid_conf;
   signal(SIGINT, sig_handler);
   signal(SIGTSTP, sig_handler);
   spdlog::info("   ___                             ");
@@ -13,26 +14,28 @@ int main(void) {
   spdlog::info(" | (__| '_/ _` | ' \\/ _` / _ \\ ' \\ ");
   spdlog::info("  \\___|_| \\__,_|_||_\\__, \\___/_||_|");
   spdlog::info("                    |___/          ");
-  spdlog::info("crangon starting");
+  spdlog::info("parsing config.json");
 
   /* read settings from config.json */
   std::ifstream ifs("config.json");
   Json::Reader reader;
   Json::Value obj;
   reader.parse(ifs, obj);
-  /*
-   * TODO: Generate machine IO with UUID or GUID
-   */
-  spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
+  /* TODO: Generate machine IO with UUID or GUID */
   if (ifs.fail()) {
     spdlog::critical("error -> exit, config.json not found!");
     exit(1);
   }
+  vidf->vid_id = obj["camera_id"].asUInt();
+  spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
+  spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
   /* spawn thread */
-  std::thread direct (director);
-  std::thread perform (performer);
-  direct.join();
-  perform.join();
+  std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+#ifdef USE_ZMQ
+  std::thread mq (send_mq);
+  mq.join();
+#endif
+  prog.join();
   spdlog::info("crangon exitting");
   spdlog::info("shutting down system");
   return 0;
@@ -49,6 +52,6 @@ static void sig_handler(int signum) {
   }
 }
 
-static void sys_shutdown(void) {
-  system("shutdown -P now");
+/* in-case on real hardware
 }
+*/

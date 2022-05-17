@@ -18,10 +18,14 @@
 #include "prog.hh"
 
 /* messaging with GUI  */
-#include "cli.hh"
+#ifdef USE_ZMQ
+#include "mq.hh"
+#endif
 
 /* collecting data */
+#ifdef USE_SQL
 #include "sq.hh"
+#endif
 
 /* logging */
 #include <spdlog/spdlog.h>
@@ -41,8 +45,4 @@ typedef struct {
 
 /* system handler */
 static void sig_handler(int signum);
-static void sys_shutdown(void);
-
-/* functions */
-void director(void);
-void performer(void);
+/* static void sys_shutdown(void); */
