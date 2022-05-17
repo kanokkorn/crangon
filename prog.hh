@@ -9,13 +9,17 @@
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
+#include <spdlog/spdlog.h>
 
-void get_frame(uint8_t cam_id) {
-  VideoCapture cap(cam_id, cv::CAP_ANY);
+void get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
+  cv::VideoCapture cap(cam_id, cv::CAP_ANY);
+  /* TODO: never shutdown even if no camera */
   if (!cap.isOpened()) {
     spdlog::critical("can't open selected camera");
     exit(1);
   }
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, vid_width);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT,vid_height);
 #ifdef USE_VID
 void get_frame(char** video_file) {
   VideoCapture cap(video_file);
@@ -39,8 +43,13 @@ void get_frame(char** video_file) {
   }
 }
 
+/* TODO: add image processing method */
 cv::Mat imgproc(cv::Mat input) {
-  /* TODO: add image processing method */
+  cv::Mat blur, edge, post;
+  cv::GaussianBlur(input, blur, cv::Size(3, 3), 0, 0);
+  cv::bilateralFilter(blur, blur, 2, 2*2, 2/2);
+  cv::Canny(blur, edge, 100, 200, 3, false);
+  return edge;
 }
 
 #endif /* __PROG_H__ */
