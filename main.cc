@@ -35,6 +35,11 @@ int main(void) {
   std::thread mq (send_mq);
   mq.join();
 #endif
+#ifdef USE_SQL
+  std::thread sq (send_sq);
+  sq.join();
+#endif
+
   prog.join();
   spdlog::info("crangon exitting");
   spdlog::info("shutting down system");
