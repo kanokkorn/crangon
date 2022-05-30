@@ -12,6 +12,7 @@
 #include <thread>
 #include <atomic>
 #include <chrono>
+#include <future>
 #include <condition_variable>
 
 /* image process */
