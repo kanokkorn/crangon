@@ -5,6 +5,9 @@
 
 #include "main.hh"
 
+std::atomic_bool run = { false };
+std::promise<void> exitSignal;
+
 int main(void) {
   vid_conf *vidf = new vid_conf;
   signal(SIGINT, sig_handler);
