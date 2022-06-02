@@ -5,8 +5,7 @@
 
 #include "main.hh"
 
-std::atomic_bool run = { false };
-std::promise<void> exitSignal;
+std::atomic<bool> exit_thread_flag{false};
 
 int main(void) {
   vid_conf *vidf = new vid_conf;
@@ -32,18 +31,21 @@ int main(void) {
   vidf->vid_id = obj["camera_id"].asUInt();
   spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
   spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
-  /* spawn thread */
-  std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
-#ifdef USE_ZMQ
-  std::thread mq (send_mq);
-  mq.join();
-#endif
-#ifdef USE_SQL
-  std::thread sq (send_sq);
-  sq.join();
-#endif
 
-  prog.join();
+  while (!stop) {
+    std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+  #ifdef USE_ZMQ
+    std::thread mq (send_mq);
+    mq.join();
+  #endif
+  #ifdef USE_SQL
+    std::thread sq (send_sq);
+    sq.join();
+  #endif
+    prog.join();
+  }
+  /* spawn thread */
+
   spdlog::info("crangon exitting");
   spdlog::info("shutting down system");
   return 0;
@@ -52,6 +54,7 @@ int main(void) {
 static void sig_handler(int signum) {
   if (signum == 2) {
     spdlog::critical("interrupt received. exit\n");
+    stop = 1;
     exit(signum);
   } else if (signum == 20) {
     spdlog::critical("terminal stop. pausing for 30 sec\n");
