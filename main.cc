@@ -32,8 +32,9 @@ int main(void) {
   spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
   spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
 
-  while (!stop) {
-    std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+  auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+  while (future.get()) {
+  //std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
   #ifdef USE_ZMQ
     std::thread mq (send_mq);
     mq.join();
@@ -42,7 +43,6 @@ int main(void) {
     std::thread sq (send_sq);
     sq.join();
   #endif
-    prog.join();
   }
   /* spawn thread */
 
