@@ -44,6 +44,8 @@ typedef struct {
   uint16_t id;
 }machine_id;
 
+volatile sig_atomic_t stop;
+
 /* system handler */
 static void sig_handler(int signum);
 /* static void sys_shutdown(void); */

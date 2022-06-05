@@ -33,7 +33,11 @@ int main(void) {
   spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
 
   auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
-  while (future.get()) {
+  if (future.get()) {
+    std::cout << "exit\n";
+    exit(1);
+  }
+  while (1) {
   //std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
   #ifdef USE_ZMQ
     std::thread mq (send_mq);
