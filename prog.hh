@@ -36,24 +36,26 @@ int counter(cv::Mat contourImage) {
   return 0;
 }
 
-void get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
+#ifndef USE_VID
+int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
   cv::VideoCapture cap(cam_id, cv::CAP_ANY);
   /* TODO: never shutdown even if no camera */
   if (!cap.isOpened()) {
     spdlog::critical("can't open selected camera");
-    exit(1);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    return 1;
   }
   cap.set(cv::CAP_PROP_FRAME_WIDTH, vid_width);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT,vid_height);
 #ifdef USE_VID
 void get_frame(char** video_file) {
-  VideoCapture cap(video_file);
+  cv::VideoCapture cap(video_file);
   if (!cap.isOpened()) {
     spdlog::critical("can't open video file");
     exit(1);
   }
 #endif /* USE_VID */
-  while (true) {
+  while (cap.isOpened()) {
     cv::Mat frame;
     cap >> frame;
     if (frame.empty()) {
@@ -65,10 +67,11 @@ void get_frame(char** video_file) {
     char q = (char)cv::waitKey(1);
     if (q==27)
       break;
-    cv::destroyAllWindows();
   }
+  cv::destroyAllWindows();
+  return 0;
+  }
+#endif
 }
-
-
 
 #endif /* __PROG_H__ */

@@ -30,8 +30,12 @@ int main(void) {
   }
   vidf->vid_id = obj["camera_id"].asUInt();
   spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
+  spdlog::info("Video path for debug : {0}", obj["video"].asString());
   spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
 
+#ifdef USE_VID
+  auto future = std::async(get_frame, obj["video"].asString(), vidf->vid_width, vidf->vid_height);
+#endif
   auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
   if (future.get()) {
     std::cout << "exit\n";

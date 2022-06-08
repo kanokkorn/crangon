@@ -1,5 +1,5 @@
 DEBUG = 0
-USE_VID = 0
+USE_VID = 1
 USE_ZMQ = 0
 USE_SQL = 0
 
