@@ -35,8 +35,9 @@ int main(void) {
 
 #ifdef USE_VID
   auto future = std::async(get_frame, obj["video"].asString(), vidf->vid_width, vidf->vid_height);
-#endif
+#else
   auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+#endif
   if (future.get()) {
     std::cout << "exit\n";
     exit(1);
@@ -70,7 +71,3 @@ static void sig_handler(int signum) {
     spdlog::critical("timer expired. countinuing\n");
   }
 }
-
-/* in-case on real hardware
-}
-*/
