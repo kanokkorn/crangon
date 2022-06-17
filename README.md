@@ -2,33 +2,36 @@
 
 ## Description
 
-Experiment aquaculture computer vision and analysis
+Experimental counter and analyzer aquaculture animals with state-of-the-art computer vision and machine learning methodology for minimizing error from human and maximizing the accuracy of counting
 
 ## Preresquisite
 
-This project requires seveal libraries for development
+- OpenCV4
+- JSON
 
-- libopencv4
-- libcppzmq
-- libsqlite3
-- libjson
-
-###  Debian-based system
+### Debian
 
 ```bash
-sudo apt install libopencv-dev libzmq3-dev libsqlite3-dev libjson-dev
+sudo apt install libopencv-dev libjson-dev
 ```
 
-### Arch-based system
+### FreeBSD
 
-```bash
-sudo pacman -Sy opencv zeromq sqlite libjson
+```
+sudo pkg install opencv jsoncpp
 ```
 
 ## Features
 
+Standard features that machine can do
 
 ### Counter
+
+Design to reduce human error when counting by hand and exceed human speed with unbeatable process time
+
+This machine has already been evaluated by real example of 250 prawns, accuracy is approximately 95 percent
+
+Expecting accuracy to be more than 90 percent or above __depends on speed of water flow__ (which can be adjust but requires some calculation)
 
 The program design to run as background process, it won't display anything unless open with debug flag
 
