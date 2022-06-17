@@ -4,21 +4,21 @@ CXXFLAGS = -std=c++14 -Wall -Wextra -fno-common\
 					 -pedantic
 LD = -fuse-ld=lld -rtlib=compiler-rt
 LDLIBS = -lm -pthread -ljsoncpp -lspdlog
-OPENCV = pkg-config --cflags --libs opencv4
+OPENCV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc
 
-SRC = $(wildcard *.cc)
-OBJ = $(SRC:.cc=.o)
+SRC = main.cc
+OBJ = main.o
 BIN = crangon
 
-all: $(OBJ) $(BIN)
+all: ${OBJ} ${BIN}
 
-$(OBJ): $(SRC)
-	${CXX} ${CXXFLAGS} $< -c ${OPENCV}
-${BIN}: main.o
-	${CXX} ${LD} $^ -o $@ ${OPENCV} ${LDLIBS}
+${OBJ}: ${SRC}
+	${CXX} ${CXXFLAGS} -c $< ${OPENCV}
+${BIN}: ${OBJ}
+	${CXX} ${LD} ${OBJ} -o $@ ${OPENCV} ${LDLIBS}
 clean:
-	rm -rf ${OBJ} ${BIN}
+	rm -rf *.o ${BIN}
 
 .PHONY: all clean
