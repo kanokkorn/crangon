@@ -42,19 +42,6 @@ int main(void) {
     std::cout << "exit\n";
     exit(1);
   }
-  while (1) {
-  //std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
-  #ifdef USE_ZMQ
-    std::thread mq (send_mq);
-    mq.join();
-  #endif
-  #ifdef USE_SQL
-    std::thread sq (send_sq);
-    sq.join();
-  #endif
-  }
-  /* spawn thread */
-
   spdlog::info("crangon exitting");
   spdlog::info("shutting down system");
   return 0;
