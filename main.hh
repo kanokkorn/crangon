@@ -14,25 +14,12 @@
 #include <chrono>
 #include <future>
 #include <condition_variable>
-
-/* image process */
-#include "prog.hh"
-
-/* messaging with GUI  */
-#ifdef USE_ZMQ
-#include "mq.hh"
-#endif
-
-/* collecting data */
-#ifdef USE_SQL
-#include "sq.hh"
-#endif
-
-/* logging */
 #include <spdlog/spdlog.h>
-
-/* config and data exchange */
 #include <jsoncpp/json/json.h>
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <spdlog/spdlog.h>
 
 typedef struct {
   uint8_t vid_id;
@@ -46,6 +33,3 @@ typedef struct {
 
 volatile sig_atomic_t stop;
 
-/* system handler */
-static void sig_handler(int signum);
-/* static void sys_shutdown(void); */
