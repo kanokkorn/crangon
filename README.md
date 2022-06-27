@@ -2,7 +2,7 @@
 
 ## Description
 
-Experimental counter and analyzer aquaculture animals with state-of-the-art computer vision and machine learning methodology for minimizing error from human and maximizing the accuracy of counting
+Experimental counter and analyzer aquaculture animals with state-of-the-art computer vision and machine learning for minimizing error from human and maximizing the accuracy of counting
 
 ## Preresquisite
 
@@ -49,4 +49,4 @@ TBD
 
 ## License
 
-See ![LICENSE](https://github.com/kanokkorn/crangon/blob/main/LICENSE)
+See [LICENSE](https://github.com/kanokkorn/crangon/blob/main/LICENSE)
