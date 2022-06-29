@@ -7,56 +7,48 @@
 
 std::atomic<bool> exit_thread_flag{false};
 
-int main(void) {
-  vid_conf *vidf = new vid_conf;
-  signal(SIGINT, sig_handler);
-  signal(SIGTSTP, sig_handler);
-  spdlog::info("   ___                             ");
-  spdlog::info("  / __|_ _ __ _ _ _  __ _ ___ _ _  ");
-  spdlog::info(" | (__| '_/ _` | ' \\/ _` / _ \\ ' \\ ");
-  spdlog::info("  \\___|_| \\__,_|_||_\\__, \\___/_||_|");
-  spdlog::info("                    |___/          ");
-  spdlog::info("parsing config.json");
-
-  /* read settings from config.json */
-  std::ifstream ifs("config.json");
-  Json::Reader reader;
-  Json::Value obj;
-  reader.parse(ifs, obj);
-  /* TODO: Generate machine IO with UUID or GUID */
-  if (ifs.fail()) {
-    spdlog::critical("error -> exit, config.json not found!");
-    exit(1);
+cv::Mat imgproc(cv::Mat input) {
+  cv::cvtColor(input, input, cv::COLOR_BGR2GRAY);
+  cv::threshold(input, input, 128, 255, cv::THRESH_BINARY);
+  std::vector<std::vector<cv::Point> > contours;
+  cv::Mat contourOutput = input.clone();
+  cv::findContours( contourOutput, contours, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
+  /* Draw contours */
+  cv::Mat contourImage(input.size(), CV_8UC3, cv::Scalar(0, 0, 0));
+  cv::Scalar colors[3];
+  colors[0] = cv::Scalar(255, 0, 0);
+  colors[1] = cv::Scalar(0, 255, 0);
+  colors[2] = cv::Scalar(0, 0, 255);
+  for (size_t idx = 0; idx < contours.size(); idx++) {
+    cv::drawContours(contourImage, contours, idx, colors[idx % 5]);
   }
-  vidf->vid_id = obj["camera_id"].asUInt();
-  spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
-  spdlog::info("Video path for debug : {0}", obj["video"].asString());
-  spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
+  return contourImage;
+}
 
-#ifdef USE_VID
-  auto future = std::async(get_frame, obj["video"].asString(), vidf->vid_width, vidf->vid_height);
-#else
-  auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
-#endif
-  if (future.get()) {
-    std::cout << "exit\n";
-    exit(1);
+int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
+  cv::VideoCapture cap(cam_id, cv::CAP_ANY);
+  /* TODO: never shutdown even if no camera */
+  if (!cap.isOpened()) {
+    spdlog::critical("can't open selected camera");
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    return 1;
   }
-  while (1) {
-  //std::thread prog (get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
-  #ifdef USE_ZMQ
-    std::thread mq (send_mq);
-    mq.join();
-  #endif
-  #ifdef USE_SQL
-    std::thread sq (send_sq);
-    sq.join();
-  #endif
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, vid_width);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT,vid_height);
+  while (cap.isOpened()) {
+    cv::Mat frame;
+    cap >> frame;
+    if (frame.empty()) {
+      spdlog::critical("got empty frame, breaking");
+      break;
+    }
+    cv::imshow("normal output", frame);
+    cv::imshow("process output", imgproc(frame));
+    char q = (char)cv::waitKey(1);
+    if (q==27)
+      break;
   }
-  /* spawn thread */
-
-  spdlog::info("crangon exitting");
-  spdlog::info("shutting down system");
+  cv::destroyAllWindows();
   return 0;
 }
 
@@ -70,4 +62,32 @@ static void sig_handler(int signum) {
     sleep(30);
     spdlog::critical("timer expired. countinuing\n");
   }
+}
+
+int main(void) {
+  vid_conf *vidf = new vid_conf;
+  signal(SIGINT, sig_handler);
+  signal(SIGTSTP, sig_handler);
+  spdlog::info("   ___                             ");
+  spdlog::info("  / __|_ _ __ _ _ _  __ _ ___ _ _  ");
+  spdlog::info(" | (__| '_/ _` | ' \\/ _` / _ \\ ' \\ ");
+  spdlog::info("  \\___|_| \\__,_|_||_\\__, \\___/_||_|");
+  spdlog::info("                    |___/          ");
+  spdlog::info("parsing config.json");
+  std::ifstream ifs("config.json");
+  Json::Reader reader;
+  Json::Value obj;
+  reader.parse(ifs, obj);
+  if (ifs.fail()) {
+    spdlog::critical("error -> exit, config.json not found!");
+    exit(1);
+  }
+  vidf->vid_id = obj["camera_id"].asUInt();
+  spdlog::info("Machine ID : 0x{0:x}", obj["machine_id"].asUInt());
+  spdlog::info("Video path for debug : {0}", obj["video"].asString());
+  spdlog::info("Camera  ID : {0:d}", vidf->vid_id);
+  auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+  spdlog::info("crangon exitting");
+  spdlog::info("shutting down system");
+  return 0;
 }
