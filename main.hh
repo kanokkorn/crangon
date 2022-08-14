@@ -32,4 +32,3 @@ typedef struct {
 }machine_id;
 
 volatile sig_atomic_t stop;
-
