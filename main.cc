@@ -70,7 +70,7 @@ int main(void) {
   vid_conf *vidf = new vid_conf;
   signal(SIGINT, sig_handler);
   signal(SIGTSTP, sig_handler);
-  spdlog::info("running OpenCV version: {s}",  CV_VERSION);
+  spdlog::info("running OpenCV version: {}", CV_VERSION);
   spdlog::info("parsing config.json");
   std::ifstream ifs("config.json");
   Json::Reader reader;
@@ -81,9 +81,9 @@ int main(void) {
     exit(1);
   }
   vidf->vid_id = obj["camera_id"].asUInt();
-  spdlog::info("SERIAL: {:s}", obj["device_serial"].asString());
-  spdlog::info("Video path for debug: {0}", obj["video"].asString());
-  spdlog::info("Camera ID: {0:d}", vidf->vid_id);
+  spdlog::info("SERIAL: {}", obj["device_serial"].asString());
+  spdlog::info("Video path for debug: {}", obj["video"].asString());
+  spdlog::info("Camera Model: {0:d}", vidf->vid_id);
   auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
   return 0;
 }

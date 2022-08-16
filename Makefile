@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS = -std=c++14 -nostdlib -Wall -Wextra -fno-common\
+CXXFLAGS = -std=c++17 -nostdlib -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
 					 -pedantic -g
 LDFLAGS = -fuse-ld=lld -rtlib=compiler-rt
