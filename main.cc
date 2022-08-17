@@ -30,7 +30,6 @@ int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
   cv::VideoCapture cap(cam_id, cv::CAP_ANY);
   if (!cap.isOpened()) {
     spdlog::critical("can't open selected camera");
-    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
     return 1;
   }
   cap.set(cv::CAP_PROP_FRAME_WIDTH, vid_width);
@@ -80,10 +79,18 @@ int main(void) {
     spdlog::critical("error -> exit, config.json not found!");
     exit(1);
   }
-  vidf->vid_id = obj["camera_id"].asUInt();
   spdlog::info("SERIAL: {}", obj["device_serial"].asString());
-  spdlog::info("Video path for debug: {}", obj["video"].asString());
-  spdlog::info("Camera Model: {0:d}", vidf->vid_id);
-  auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+  if (obj["enable_cam"].asBool()) {
+    vidf->vid_id = obj["camera_id"].asUInt();
+    spdlog::info("Camera Model: {0:d}", vidf->vid_id);
+    try {
+      auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+    }
+    catch (cv::Exception& e) {
+      spdlog::warn("cannot open camera: {}", obj["video"].asString());
+    }
+  } else {
+    spdlog::warn("enable_cam is set to false, use video path instead: {}", obj["video"].asString());
+  }
   return 0;
 }
