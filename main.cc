@@ -90,7 +90,8 @@ int main(void) {
       spdlog::warn("cannot open camera: {}", obj["video"].asString());
     }
   } else {
-    spdlog::warn("enable_cam is set to false, use video path instead: {}", obj["video"].asString());
+    spdlog::warn("enable_cam is set to false, crangon will use video path instead: {}", obj["video"].asString());
+    auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
   }
   return 0;
 }

@@ -1,9 +1,5 @@
 #define _POSIX_SOURCE
 
-#ifndef __has_builtin
-  #define __has_builtin(x) 0
-#endif
-
 #include <iostream>
 #include <cstdlib>
 #include <csignal>
