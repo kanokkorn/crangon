@@ -51,7 +51,7 @@ int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
   return 0;
 }
 
-/* CTRL + C hanlder */
+/* CTRL + C handler */
 
 void sig_handler(int signum) {
   if (signum == 2) {
@@ -84,14 +84,22 @@ int main(void) {
     vidf->vid_id = obj["camera_id"].asUInt();
     spdlog::info("Camera Model: {0:d}", vidf->vid_id);
     try {
-      auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+      auto camera = std::async(
+          get_frame,
+          vidf->vid_id,
+          vidf->vid_width,
+          vidf->vid_height
+          );
     }
     catch (cv::Exception& e) {
       spdlog::warn("cannot open camera: {}", obj["video"].asString());
     }
   } else {
-    spdlog::warn("enable_cam is set to false, crangon will use video path instead: {}", obj["video"].asString());
-    auto future = std::async(get_frame, vidf->vid_id, vidf->vid_width, vidf->vid_height);
+    spdlog::warn(
+        "enable_cam is set to false, crangon will use video path instead: {}",
+        obj["video"].asString()
+        );
+    vidf->vid_path = obj["camera_id"].asString();
   }
   return 0;
 }
