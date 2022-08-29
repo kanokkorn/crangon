@@ -21,13 +21,13 @@
 
 typedef struct {
   uint8_t vid_id;
-  uint8_t vid_width;
-  uint8_t vid_height;
+  uint16_t vid_width;
+  uint16_t vid_height;
   std::string vid_path;
 }vid_conf;
 
 typedef struct {
-  uint16_t id;
-}machine_id;
+  long long img_dat;
+}data;
 
 volatile sig_atomic_t stop;
