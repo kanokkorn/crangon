@@ -8,8 +8,8 @@ OPENCV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc
 
-SRC = main.cc
-OBJ = main.o
+SRC = main.cc process.cc
+OBJ = main.o process.o
 BIN = crangon
 
 all: ${OBJ} ${BIN}
