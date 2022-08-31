@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS = -std=c++14 -nostdlib -Wall -Wextra -fno-common\
+CXXFLAGS = -std=c++17 -nostdlib -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
 					 -pedantic -g
 LDFLAGS = -fuse-ld=lld -rtlib=compiler-rt
@@ -8,8 +8,8 @@ OPENCV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc
 
-SRC = main.cc
-OBJ = main.o
+SRC = main.cc process.cc
+OBJ = main.o process.o
 BIN = crangon
 
 all: ${OBJ} ${BIN}
