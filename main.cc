@@ -38,7 +38,7 @@ int main(void) {
     spdlog::info("Camera Model: {0:d}", vidf->vid_id);
     try {
       auto camera = std::async(
-          get_frame,
+          img_get_frame,
           vidf->vid_id,
           vidf->vid_width,
           vidf->vid_height
