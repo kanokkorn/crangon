@@ -19,6 +19,7 @@ void sig_handler(int signum) {
 }
 
 int main(void) {
+  int8_t fd[2];
   vid_conf *vidf = new vid_conf;
   signal(SIGINT, sig_handler);
   signal(SIGTSTP, sig_handler);
@@ -37,12 +38,13 @@ int main(void) {
     vidf->vid_id = obj["camera_id"].asUInt();
     spdlog::info("Camera Model: {0:d}", vidf->vid_id);
     try {
-      auto camera = std::async(
-          img_get_frame,
-          vidf->vid_id,
-          vidf->vid_width,
-          vidf->vid_height
-          );
+      img_get_frame(vidf->vid_id, vidf->vid_width, vidf->vid_height);
+      //auto camera = std::async(
+      //    img_get_frame,
+      //    vidf->vid_id,
+      //    vidf->vid_width,
+      //    vidf->vid_height
+      //    );
     }
     catch (cv::Exception& e) {
       spdlog::warn("cannot open camera: {}", obj["video"].asString());
