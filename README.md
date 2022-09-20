@@ -22,10 +22,12 @@ sudo pkg install opencv jsoncpp
 ```
 
 ## Features
+---
 
 Standard features that machine can do
 
 ### Counter
+---
 
 Design to reduce human error when counting by hand and exceed human speed with unbeatable process time
 
@@ -40,13 +42,21 @@ The program design to run as background process, it won't display anything unles
 > screenshot of prawn counting system while debugging
 
 ### Size measurement
+---
 
-TBD
+Will be annouce when counter is already stable
 
-### Analyst
+### TODO
+---
 
-TBD
+- background process & IPC
+- ~~switch to bmake & test gmake compatible~~
+- remove pkg-config
+- CMake support
+- Test on FreeBSD
+- Test on Hardware
 
 ## License
+---
 
 See [LICENSE](https://github.com/kanokkorn/crangon/blob/main/LICENSE)
