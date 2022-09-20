@@ -2,7 +2,7 @@
 
 /* contour and return counting number */
 
-cv::Mat counter(cv::Mat input) {
+cv::Mat img_counter(cv::Mat input) {
   cv::cvtColor(input, input, cv::COLOR_BGR2GRAY);
   cv::threshold(input, input, 128, 255, cv::THRESH_BINARY);
   std::vector<std::vector<cv::Point> > contours;
@@ -21,7 +21,7 @@ cv::Mat counter(cv::Mat input) {
 
 /* read frame from camera input or video */
 
-int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
+int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
   cv::VideoCapture cap(cam_id, cv::CAP_ANY);
   if (!cap.isOpened()) {
     spdlog::critical("can't open selected camera");
@@ -37,7 +37,7 @@ int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
       break;
     }
     cv::imshow("normal output", frame);
-    cv::imshow("process output", counter(frame));
+    cv::imshow("process output", img_counter(frame));
     char q = (char)cv::waitKey(1);
     if (q==27)
       break;

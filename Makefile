@@ -4,6 +4,8 @@ CXXFLAGS = -std=c++17 -nostdlib -Wall -Wextra -fno-common\
 					 -pedantic -g
 LDFLAGS = -fuse-ld=lld -rtlib=compiler-rt
 LDLIBS = -lm -pthread -ljsoncpp -lspdlog
+
+# pkg-config will be deprecate
 OPENCV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc

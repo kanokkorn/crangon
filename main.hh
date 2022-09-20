@@ -6,10 +6,9 @@
 #include <string>
 #include <fstream>
 #include <thread>
-#include <atomic>
-#include <chrono>
-#include <future>
-#include <condition_variable>
+
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <spdlog/spdlog.h>
 #include <jsoncpp/json/json.h>

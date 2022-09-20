@@ -10,5 +10,13 @@ typedef struct {
   std::string vid_path;
 }vid_conf;
 
-cv::Mat counter(cv::Mat input);
-int get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height);
+typedef struct {
+  uint32_t real_out;
+  uint32_t average;
+  int32_t computer_buf;
+  int32_t computer_now;
+}output_data;
+
+cv::Mat img_counter(cv::Mat input);
+int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height);
+
