@@ -55,6 +55,7 @@ Will be annouce when counter is already stable
 - CMake support
 - Test on FreeBSD
 - Test on Hardware
+- logging with only ```tee```
 
 ## License
 ---
