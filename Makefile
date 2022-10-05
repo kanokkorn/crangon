@@ -5,8 +5,9 @@ CXXFLAGS = -std=c++17 -nostdlib -Wall -Wextra -fno-common\
 LDFLAGS = -fuse-ld=lld -rtlib=compiler-rt
 LDLIBS = -lm -pthread -ljsoncpp -lspdlog
 
-# pkg-config will be deprecate
+# pkg-config will be remove when we know how to build on FreeBSD
 OPENCV = `pkg-config --cflags --libs opencv4`
+#OPENCV = -I/include
 
 .SUFFIXES: .cc
 

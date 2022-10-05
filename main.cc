@@ -5,24 +5,28 @@
 
 #include "main.hh"
 
-/* CTRL + C handler */
+void tstp_handler(int signum) {
+  spdlog::warn("SIGTSTP received - pausing");
+  /* pause program for x seconds */
+}
 
-void sig_handler(int signum) {
-  if (signum == 2) {
-    spdlog::critical("interrupt received. exit\n");
-    exit(signum);
-  } else if (signum == 20) {
-    spdlog::critical("terminal stop. pausing for 30 sec\n");
-    sleep(30);
-    spdlog::critical("timer expired. countinuing\n");
-  }
+void kill_handler(int signum) {
+  spdlog::critical("SIGKILL received. unexpected error will be report\n");
+  /* shutdown everything */
+}
+
+void int_handler(int signum) {
+  spdlog::warn("SIGINT received.");
 }
 
 int main(void) {
-  int8_t fd[2];
   vid_conf *vidf = new vid_conf;
-  signal(SIGINT, sig_handler);
-  signal(SIGTSTP, sig_handler);
+
+  /* setup signal handler */
+  signal(SIGINT, int_handler);
+  signal(SIGTSTP, tstp_handler);
+
+  /* looking for better way to log & parse config file*/
   spdlog::info("running OpenCV version: {}", CV_VERSION);
   spdlog::info("parsing config.json");
   std::ifstream ifs("config.json");
