@@ -20,21 +20,23 @@ void int_handler(int signum) {
 }
 
 int main(void) {
+  /* reserved memory for camera configuration */
   vid_conf *vidf = new vid_conf;
 
   /* setup signal handler */
   signal(SIGINT, int_handler);
   signal(SIGTSTP, tstp_handler);
 
-  /* looking for better way to log & parse config file*/
-  spdlog::info("running OpenCV version: {}", CV_VERSION);
-  spdlog::info("parsing config.json");
-  std::ifstream ifs("config.json");
-  Json::Reader reader;
-  Json::Value obj;
-  reader.parse(ifs, obj);
+  /*
+   * looking for better way to log & parse config file
+   * spdlog::info("running OpenCV version: {}", CV_VERSION);
+   * spdlog::info("parsing config.json");
+   */
+  /* check config file and OpenCV version */
+  std::cout << "running OpenCV version: " << CV_VERSION << std::endl;
+  std::ifstream ifs("config_file.txt");
   if (ifs.fail()) {
-    spdlog::critical("error -> exit, config.json not found!");
+    std::cout << "error! 'config_file.txt' not found" << std::endl;
     exit(1);
   }
   spdlog::info("SERIAL: {}", obj["device_serial"].asString());
@@ -51,7 +53,7 @@ int main(void) {
       //    );
     }
     catch (cv::Exception& e) {
-      spdlog::warn("cannot open camera: {}", obj["video"].asString());
+      std::cout << "can't open camera, abort" << std::endl;
     }
   } else {
     spdlog::warn(
