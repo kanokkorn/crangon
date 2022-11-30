@@ -1,5 +1,5 @@
 CXX = clang++
-CXXFLAGS = -std=c++17 -nostdlib -Wall -Wextra -fno-common\
+CXXFLAGS = -std=c++17 -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
 					 -pedantic -g
 LDFLAGS = -rtlib=compiler-rt -fuse-ld=lld
@@ -7,17 +7,16 @@ LDLIBS = -lm -pthread -I/usr/local/include/opencv4
 
 .SUFFIXES: .cc
 
-OBJ = process.o
+SRC = process.cc main.cc
+OBJ = process.o main.o
 BIN = crangon
 
 all: ${OBJ} ${BIN}
 
-#main.o : main.cc
-#	${CXX} ${CXXFLAGS} -c $< ${LDLIBS}
-process.o : process.cc
+${OBJ} : ${SRC}
 	${CXX} ${CXXFLAGS} -c $< ${LDLIBS}
 
-${BIN}: process.o
+${BIN}: ${OBJ}
 	${CXX} ${LDFLAGS} ${OBJ} -o $@ ${LDLIBS}
 clean:
 	rm -rf *.o ${BIN}

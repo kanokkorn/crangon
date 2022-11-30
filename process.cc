@@ -21,8 +21,7 @@ cv::Mat img_counter(cv::Mat input) {
 
 /* read frame from camera input or video */
 
-int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
-  cv::VideoCapture cap(cam_id, cv::CAP_ANY);
+int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) { cv::VideoCapture cap(cam_id, cv::CAP_ANY);
   if (!cap.isOpened()) {
     std::cout << "cant open camera" << std::endl;
     return 1;

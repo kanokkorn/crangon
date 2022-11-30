@@ -1,6 +1,7 @@
 /*
  * File: main.cc
  * Author: kanokkorn kornkankit <kanokorn@outlook.jp>
+ * consider rewrite to be usable next merge
  */
 
 #include "main.hh"
@@ -20,19 +21,9 @@ void int_handler(int signum) {
 }
 
 int main(void) {
-  /* reserved memory for camera configuration */
   vid_conf *vidf = new vid_conf;
-
-  /* setup signal handler */
   signal(SIGINT, int_handler);
   signal(SIGTSTP, tstp_handler);
-
-  /*
-   * looking for better way to log & parse config file
-   * spdlog::info("running OpenCV version: {}", CV_VERSION);
-   * spdlog::info("parsing config.json");
-   */
-  /* check config file and OpenCV version */
   std::cout << "running OpenCV version: " << CV_VERSION << std::endl;
   std::ifstream ifs("config_file.txt");
   if (ifs.fail()) {
@@ -40,6 +31,5 @@ int main(void) {
     exit(1);
   }
   std::cout << "machine serial: " << std::endl;
-  /* check if camera is connected from interface */
   exit(1);
 }
