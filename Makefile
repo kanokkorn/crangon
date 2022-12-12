@@ -1,24 +1,23 @@
-CXX = clang++ CXXFLAGS = -std=c++17 -nostdlib -Wall -Wextra -fno-common\
+CXX = clang++
+CXXFLAGS = -std=c++17 -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
 					 -pedantic -g
-LDFLAGS = -fuse-ld=lld -rtlib=compiler-rt
-LDLIBS = -lm -pthread -ljsoncpp -lspdlog
-
-# pkg-config will be remove when we know how to build on FreeBSD
-OPENCV = -I/usr/local/include/opencv4
+LDFLAGS = -rtlib=compiler-rt -fuse-ld=lld
+LDLIBS = -lm -pthread -I/usr/local/include/opencv4
 
 .SUFFIXES: .cc
 
-SRC = main.cc process.cc
-OBJ = main.o process.o
+SRC = process.cc main.cc
+OBJ = process.o main.o
 BIN = crangon
 
 all: ${OBJ} ${BIN}
 
-${OBJ}: ${SRC}
-	${CXX} ${CXXFLAGS} -c $< ${OPENCV}
+${OBJ} : ${SRC}
+	${CXX} ${CXXFLAGS} -c $< ${LDLIBS}
+
 ${BIN}: ${OBJ}
-	${CXX} ${LDFLAGS} ${OBJ} -o $@ ${OPENCV} ${LDLIBS}
+	${CXX} ${LDFLAGS} ${OBJ} -o $@ ${LDLIBS}
 clean:
 	rm -rf *.o ${BIN}
 

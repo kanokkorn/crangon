@@ -21,10 +21,9 @@ cv::Mat img_counter(cv::Mat input) {
 
 /* read frame from camera input or video */
 
-int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
-  cv::VideoCapture cap(cam_id, cv::CAP_ANY);
+int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) { cv::VideoCapture cap(cam_id, cv::CAP_ANY);
   if (!cap.isOpened()) {
-    spdlog::critical("can't open selected camera");
+    std::cout << "cant open camera" << std::endl;
     return 1;
   }
   cap.set(cv::CAP_PROP_FRAME_WIDTH, vid_width);
@@ -33,7 +32,7 @@ int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height) {
     cv::Mat frame;
     cap >> frame;
     if (frame.empty()) {
-      spdlog::critical("got empty frame, breaking");
+      std::cout << "got empty frame, breaking" << std::endl;
       break;
     }
     cv::imshow("normal output", frame);
