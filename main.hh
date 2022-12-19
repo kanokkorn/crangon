@@ -7,7 +7,6 @@
 #include <string>
 #include <fstream>
 #include <thread>
-#include <bits/stdc++.h>
 
 /* syscall */
 #include <unistd.h>
