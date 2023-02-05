@@ -39,6 +39,12 @@ sudo apt install libopencv-dev libjson-dev
 sudo pkg install opencv jsoncpp
 ```
 
+### Thought
+---
+
+- consider alternative computer vision frameworks like `ccv`
+- rewrite in c language for portability
+
 ### Current project status
 ---
 
