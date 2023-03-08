@@ -10,6 +10,10 @@
 #include <fstream>
 #include <thread>
 
+/* IPC */
+#include <sys/types.h>
+#include <sys/ipc.h>
+
 /* syscall */
 #include <unistd.h>
 #include <sys/types.h>
