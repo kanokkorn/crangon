@@ -1,3 +1,5 @@
+PREFIX ?= /usr/local/bin
+
 CXX = clang++
 CXXFLAGS = -std=c++17 -libstdc++ -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
@@ -8,8 +10,8 @@ CV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc
 
-SRC = main.cc
-OBJ = main.o
+SRC != ls *.c
+OBJ = ${SRC:.c=.o}
 BIN = crangon
 
 all: ${OBJ} ${BIN}
@@ -19,6 +21,9 @@ ${OBJ} : ${SRC}
 
 ${BIN}: ${OBJ}
 	${CXX} ${LDFLAGS} ${OBJ} -o $@ ${LDLIBS} ${CV}
+
+install:
+
 clean:
 	rm -rf *.o ${BIN}
 
