@@ -10,8 +10,8 @@ CV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc
 
-SRC != ls *.c
-OBJ = ${SRC:.c=.o}
+SRC != ls *.cc
+OBJ = ${SRC:.cc=.o}
 BIN = crangon
 
 all: ${OBJ} ${BIN}
