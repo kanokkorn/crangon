@@ -64,11 +64,12 @@ void int_handler(int signum) {
 #endif
 
 int main(void) {
-  std::cout << "running OpenCV version: " << CV_VERSION << std::endl;
-  std::ifstream ifs("config_file.txt");
+  printf("Crangon : %d.%d\n", VERSION, REVISION);
+  printf("OpenCV : %s\n", CV_VERSION);
+  std::ifstream ifs("config_file");
   if (ifs.fail()) {
-    std::cout << "error! 'config_file.txt' not found" << std::endl;
-    exit(1);
+    perror("error loading config file");
+    exit(-1);
   }
   std::cout << "checking camera..." << std::endl;
   /* read image from camera */

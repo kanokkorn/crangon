@@ -1,5 +1,5 @@
-#define VERSION 1.1
-#define REVISION A
+#define VERSION 1
+#define REVISION 1
 #define _POSIX_SOURCE
 
 /* common */
