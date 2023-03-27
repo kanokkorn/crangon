@@ -37,6 +37,7 @@ int img_get_frame(
   }
   cap.set(cv::CAP_PROP_FRAME_WIDTH, vid_width);
   cap.set(cv::CAP_PROP_FRAME_HEIGHT,vid_height);
+#pragma omp parallel
   while (cap.isOpened()) {
     cv::Mat frame;
     cap >> frame;
@@ -47,7 +48,7 @@ int img_get_frame(
     cv::imshow("normal output", frame);
     cv::imshow("process output", img_counter(frame));
     char q = (char)cv::waitKey(1);
-    if (q==27)
+    if (q == 27)
       break;
   }
   cv::destroyAllWindows();
