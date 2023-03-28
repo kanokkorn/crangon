@@ -5,7 +5,7 @@ CXXFLAGS = -std=c++17 -libstdc++ -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
 					 -pedantic -g
 LDFLAGS = -fuse-ld=lld
-LDLIBS = -lm -lc -pthread -I /usr/local/include/opencv4/
+LDLIBS = -lm -lc -pthread -I /usr/local/include/opencv4/ -fopenmp
 CV = `pkg-config --cflags --libs opencv4`
 
 .SUFFIXES: .cc
