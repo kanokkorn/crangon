@@ -1,29 +1,35 @@
 #define VERSION 1
 #define REVISION 1
-#define _POSIX_SOURCE
+#define _DEFAULT_SOURCE
 
-/* common */
 #include <iostream>
+#include <unistd.h>
+#include <fstream>
+#include <string>
+#include <thread>
 #include <cstdlib>
 #include <csignal>
-#include <string>
-#include <fstream>
-#include <thread>
 
-/* IPC */
+/* unix pipe for gui front-end + syscall for better stdout throughput */
+#include <sys/types.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
+#include <omp.h>
 
-/* syscall */
-#include <unistd.h>
-#include <sys/types.h>
-
-/* Opencv */
+/* currently OpenCV 4.7 dev, might switch to 3.x for BSD license */
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-/* video input config */
+
+/* pre-define camera setting based on webcam */
+#define BUF_SIZE 256
+#define CAM_WIDTH 1280
+#define CAM_HEIGHT 720
+#define CAMERA_ID 0
+#define CAMERA_PATH "/dev/video"
+
+/* fixed resolution cam, no need for dynamic allocation */
 typedef struct {
   uint8_t vid_id;
   uint16_t vid_width;
@@ -40,4 +46,4 @@ typedef struct {
 }output_data;
 
 cv::Mat img_counter(cv::Mat input);
-int img_get_frame(uint8_t cam_id, uint8_t vid_width, uint8_t vid_height);
+int img_get_frame(void);
