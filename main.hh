@@ -41,7 +41,8 @@
 #endif
 
 /* pre-define camera setting based on webcam */
-#define BUF_SIZE 256
+#define BUF_SIZE 4096
+#define COLR_CHAN 3
 #define CAM_WIDTH 1280
 #define CAM_HEIGHT 720
 #define CAMERA_ID 0
