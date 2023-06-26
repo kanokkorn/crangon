@@ -1,5 +1,18 @@
+/*
+ *  no syscall with performance is acceptable
+ *  TODO:
+ *  - *BSD and Linux compatible headers
+ *  - focus on clang features rather than GCC
+ *  - downgrade OpenCV lib to 3.x for license to match project's license
+ *  - test OpenCV version compatible
+ *  - add UNIX domain socket & IPC for extension
+ *  - test against glibc
+ *  - test against musl
+ *  - test against *BSD
+ */
+
 #define VERSION 1
-#define REVISION 1
+#define REVISION 2
 #define _DEFAULT_SOURCE
 
 #include <iostream>
@@ -8,17 +21,18 @@
 #include <string>
 #include <thread>
 #include <cstdlib>
+#include <cstdint>
 #include <csignal>
 
-
-/* unix pipe for gui front-end + syscall for better stdout throughput */
 #if defined(__linux__) || defined (__gnu_linux__)
 #include <sys/types.h>
 #include <sys/ipc.h>
 /* currently OpenCV 4.7 dev, might switch to 3.x for BSD license */
 #include <opencv4/opencv2/core.hpp>
+#include <opencv4/opencv2/core/cvstd_wrapper.hpp>
 #include <opencv4/opencv2/highgui.hpp>
 #include <opencv4/opencv2/imgproc.hpp>
+#include <opencv4/opencv2/video/background_segm.hpp>
 #endif
 
 /* develop on linux, target on *BSD systems */
@@ -40,29 +54,10 @@
 #include <omp.h>
 #endif
 
-/* pre-define camera setting based on webcam */
-#define BUF_SIZE 4096
-#define COLR_CHAN 3
-#define CAM_WIDTH 1280
-#define CAM_HEIGHT 720
-#define CAMERA_ID 0
-#define CAMERA_PATH "/dev/video"
+#define BLUR_KERNEL 3
+#define BLUR_SIGMA  2
 
-/* fixed resolution cam, no need for dynamic allocation */
-typedef struct {
-  uint8_t vid_id;
-  uint16_t vid_width;
-  uint16_t vid_height;
-  std::string vid_path;
-}vid_conf;
+#define LOW_THRESH    100
+#define THRESH_RATIO    3
+#define THRESH_KERNEL   3
 
-/* output data struct */
-typedef struct {
-  uint32_t real_out;
-  uint32_t average;
-  int32_t computer_buf;
-  int32_t computer_now;
-}output_data;
-
-cv::Mat img_counter(cv::Mat input);
-int img_get_frame(void);

@@ -1,7 +1,7 @@
 PREFIX ?= /usr/local/bin
 
 CXX = clang++
-CXXFLAGS = -std=c++17 -libstdc++ -Wall -Wextra -fno-common\
+CXXFLAGS = -std=c++14 -libstdc++ -Wall -Wextra -fno-common\
 					 -Wno-c11-extensions -Wno-unused-command-line-argument\
 					 -pedantic -g
 LDFLAGS = -fuse-ld=lld
@@ -21,8 +21,6 @@ ${OBJ} : ${SRC}
 
 ${BIN}: ${OBJ}
 	${CXX} ${LDFLAGS} ${OBJ} -o $@ ${LDLIBS} ${CV}
-
-install:
 
 clean:
 	rm -rf *.o ${BIN}
