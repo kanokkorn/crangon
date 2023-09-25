@@ -12,16 +12,15 @@
  *  - return result value
  *
  * EXTRA:
- *  - spawn a thread for stream image data to frontend via UNIX DOMAIN SOCKET
+ *  - spawn a thread for stream image data to frontend via UDS 
  *  - local storage and cache
+ *  - 
  */
 
 #include "main.hh"
 #include <opencv4/opencv2/core/cvstd_wrapper.hpp>
 #include <opencv4/opencv2/imgproc.hpp>
 #include <opencv4/opencv2/video/background_segm.hpp>
-#include <stdexcept>
-
 
 int camera_number = 0;
 cv::Ptr<cv::BackgroundSubtractor> bg_subtractor;
@@ -64,7 +63,9 @@ void read_frame(void) {
   }
 }
 
-/* Pre-processing before do contour */
+/* Pre-processing before do contour
+ * ported from old project, not test yet
+ */
 cv::Mat pre_process(cv::Mat raw_image) {
   cv::Mat processed, greyed, filtered, blured;
   cv::cvtColor(raw_image, greyed, cv::COLOR_RGB2GRAY);
@@ -83,9 +84,9 @@ cv::Mat contour_draw(cv::Mat processed) {
  * counting length of array element
  */
 int32_t contour_count(cv::Mat contoured) {
-  int image_array[20];
-  for (int& idx: image_array) {
-    std::cout << "counting" << std::endl;
+  int32_t image_array[20];
+  for (int32_t& idx: image_array) {
+    std::cout << "counting\n";
   }
   return 0;
 }
@@ -93,6 +94,7 @@ int32_t contour_count(cv::Mat contoured) {
 /* main function */
 int main(void) {
   std::cout << "probing USB for avaliable camera...\n" << std::endl;
+  local_db_avaliable();
   std::cout << camera_avalible() << std::endl;
   camera_usable();
   std::cout << "start reading frame from camera" << std::endl;

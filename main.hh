@@ -8,7 +8,7 @@
  *  - add UNIX domain socket & IPC for extension
  *  - test against glibc
  *  - test against musl
- *  - test against *BSD
+ *  - test against bsd libc
  */
 
 #define VERSION 1
@@ -27,7 +27,7 @@
 #if defined(__linux__) || defined (__gnu_linux__)
 #include <sys/types.h>
 #include <sys/ipc.h>
-/* currently OpenCV 4.7 dev, might switch to 3.x for BSD license */
+/* currently OpenCV 4.7 dev, might switch to 4.4 for BSD license */
 #include <opencv4/opencv2/core.hpp>
 #include <opencv4/opencv2/core/cvstd_wrapper.hpp>
 #include <opencv4/opencv2/highgui.hpp>
@@ -43,17 +43,21 @@
 #include <limits.h>
 #include <linux/limits.h>
 #include <linux/param.h>
-/* currently OpenCV 4.7 dev, might switch to 3.x for BSD license */
+/* currently OpenCV 4.7 dev, might switch to 4.4 to keep all file BSD license */
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #endif 
 
-/* enable OpenMP */ 
+/* OpenCV has OpenMP built-in, do we really need it here? */ 
 #ifdef OMP
 #include <omp.h>
 #endif
 
+/* sqlite for local database & cache */
+#include "sqldb.hh"
+
+/* PARAMS FOR OPENCV */
 #define BLUR_KERNEL 3
 #define BLUR_SIGMA  2
 
