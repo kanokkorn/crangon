@@ -36,7 +36,6 @@ ${BIN}: ${OBJ}
 
 install:
 	cp ${BIN} /usr/local/bin/${BIN}
-
 clean:
 	rm -rf *.o ${BIN}
 
