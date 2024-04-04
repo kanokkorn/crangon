@@ -2,41 +2,40 @@
 
 ## Description
 
-Experimental counter and analyzer aquaculture animals with state-of-the-art computer vision and machine learning for minimizing error from human and maximizing the accuracy of counting
+Experimental counter and analyzer aquaculture animals with computer vision and machine learning assisted for minimizing error from human and maximizing the accuracy of counting
 
-This project was designed to reduce human error when counting by hand and exceed human speed with unbeatable process time.
-
-A machine has already been evaluated by counting against 250 baby prawns with approximately 95% accuracy using less than 2 minutes, with increase water flow rate. accuracy dropped slightly to 90% due to frame skipping in visual processing.
-
-To maximize effiency, we'll be using minimal Debian/FreeBSD to allow us to customize every processes, task and finest adjustment to system to ensure we aren't waste any compute power.
+This project was designed to be a background process and needed a front-end application [cragui](https://github.com) to be fully functional
 
 ![experiment](https://i.imgur.com/pyDZTjF.gif)
 
-> a short demo of progession in baby prawn counter running on Nvidia Jetson Nano
+> a short demo of progression in small prawn counter running on Nvidia Jetson Nano
+
 
 ## Goals
 ---
 
-- Precision baby prawn counter with ±5% error rate against 2000 prawn with less than 3 minutes operate time.
-- Modern and accessible user interface with focus on user and machine operator experience.
-- Design a machine with modularity to be expandable, customizable and upgradable.
+- image processing time <50ms per frame without sacrifice accuracy
+- minimal memory footprint enough for embedded
+- extensible with front-end through UDS & TCP
+- fast & secure local storage
+- works well with BSD Unix or Linux with musl & glibc
 
-
-## Preresquisite
+## Prerequisite
 
 - OpenCV4
-- JSON
+- CMake
+- sqlite3
 
-### Debian
+### Debian required packages
 
 ```bash
-sudo apt install libopencv-dev libjson-dev
+sudo apt install libopencv-dev libsqlite3-dev cmake
 ```
 
-### FreeBSD
+### FreeBSD required packages
 
-```
-sudo pkg install opencv jsoncpp
+```sh
+sudo pkg install opencv libsqlite3-dev cmake
 ```
 
 ### Thought
@@ -48,8 +47,10 @@ sudo pkg install opencv jsoncpp
 ### Current project status
 ---
 
-- Check and test FreeBSD compatibility with target hardware.
-- Build and test project against FreeBSD's version of libraries.
+[ ] reimplement image processing pipeline from previous project.
+[ ] add an additional functionally 
+[ ] check and test FreeBSD compatibility with target hardware.
+[ ] build and test project against FreeBSD version of libraries.
 
 ## License
 ---
