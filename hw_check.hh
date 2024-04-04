@@ -22,4 +22,6 @@
 #include <linux/param.h>
 #endif // GNU Linux
 
+extern bool chk_camera(void);
+
 #endif

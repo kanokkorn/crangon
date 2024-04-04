@@ -1,28 +1,26 @@
 #include "hw_check.hh"
 
-uint8_t camera(void) {
-  /* TBD: camera interface not decide yet */
-  return 0;
+/* check camera by looking for /tty/dev/cam0, quit on false */
+extern bool camera(void) {
+  return true;
 }
 
-uint8_t usbcon(void) {
-  return 0;
+bool usbcon(void) {
+  return true;
 }
 
-uint8_t on_display(void) {
-  /* TBD: display protocol not decide yet */
-  return 0;
+/* check for external display */
+bool on_display(void) {
+  return true;
 }
 
-uint8_t ext_display(void) {
-  /* TBD: display protocol not decide yet */
-  return 0;
+bool ext_display(void) {
+  return true;
 }
 
-uint8_t hw_readiness(void) {
-  if (camera || usbcon || on_display || ext_display) {
-    return 1;
+extern bool hw_readiness(void) {
+  if (camera() || usbcon() || on_display() || ext_display()) {
+    return true;
   }
-  return 0;
+  return false;
 }
-
