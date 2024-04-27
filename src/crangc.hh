@@ -52,12 +52,6 @@
 #include <omp.h>
 #endif
 
-/* check for local configuration file  */
-extern "C" {
-  int check_valid_file(char*);
-  #include "parser.c"
-};
-
 /* colour */
 #define RED "\x1B[31m"
 #define GRN "\x1B[32m"
@@ -75,6 +69,12 @@ extern "C" {
 #define CAM_HEIGHT  720
 #define CAMERA_ID   0
 #define CAMERA_PATH "/dev/video"
+
+/* pre-defined params */
+#define LOW_THRESH      4
+#define THRESH_RATIO    4
+#define THRESH_KERNEL   5
+#define BLUR_SIGMA      5
 
 /* main counter */
 int img_counter   (cv::Mat input);
