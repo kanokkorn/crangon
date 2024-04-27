@@ -1,7 +1,3 @@
 *.db
 *.json
-<<<<<<< HEAD
 /build/
-=======
-*.o
->>>>>>> 9dd1b97950bf206e5eb41069eafb287ef51688d1

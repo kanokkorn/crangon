@@ -1,10 +1,4 @@
-/* determine what data to be store in table
- *  - customer title
- *  - date capture
- *  - total counting number
- *  - group + number for each group
- *  - time usage
- */
+/* */
 #include "sqldb.hh"
 
 /* create db file with table if not exist */

@@ -8,23 +8,19 @@
 #include <string>
 #include <fstream>
 
-/* unix pipe for gui front-end + syscall for better stdout throughput */
+/* unix pipe for gui front-end */
 #if defined(__linux__) || defined (__aarch64__)
 #define   PLATFORM "x86_64 Linux"
 #include <sys/types.h>
 #include <sys/ipc.h>
 #endif
 
+/* header for arm64 linux */
 #if defined(__linux__) || defined (__aarch64__)
 #define   PLATFORM "x86_64 Linux"
 #include <sys/types.h>
 #include <sys/ipc.h>
 #endif
-
-#include <opencv4/opencv2/opencv.hpp>
-#include <opencv4/opencv2/core/core.hpp>
-#include <opencv4/opencv2/opencv_modules.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
 
 /* 
  *  prototyping  ->  x86 & Aarch64 linux
@@ -37,19 +33,26 @@
 #include <linux/limits.h>
 #include <linux/param.h>
 
-/* another opencv include for some reasons */
+/* include for pkgconfig */
+#include <opencv4/opencv2/opencv.hpp>
+#include <opencv4/opencv2/core/core.hpp>
+#include <opencv4/opencv2/opencv_modules.hpp>
+#include <opencv4/opencv2/imgproc/imgproc.hpp>
+
+
+/* include for direct linking */
 #include <opencv4/opencv2/core/core.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #endif 
 
-/* enable OpenMP if platform support */ 
+/* what function needs OpenMP ? */ 
 #ifdef OMP
 #include <omp.h>
 #endif
 
-/* what's file ? and how valid ? */
+/* check for local configuration file  */
 extern "C" {
   int check_valid_file(char*);
   #include "parser.c"

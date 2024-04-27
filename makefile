@@ -23,7 +23,7 @@ CV = `pkg-config --cflags --libs opencv4`
 .SUFFIXES: .cc
 
 SRC != 	ls *.cc
-OBJ	= 	crangc.o hw_check.o script.o
+OBJ	= 	crangc.o hw_check.o script.o sqldb.o
 BIN = 	crangc
 
 all: ${OBJ} ${BIN}

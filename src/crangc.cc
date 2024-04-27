@@ -1,7 +1,5 @@
-<<<<<<< HEAD:crangc.cc
 /*
  * 	File: main.cc
- *  Author: kanokkorn kornkankit <kanokorn@outlook.jp>
  * 	written on Linux, designed to work on FreeBSD 13.x and later
  */
 
@@ -107,17 +105,6 @@ std::string camera_avalible(void) {
   return result;
 }
 
-/* if camera is already connect, will it usable ? */
-void camera_usable(void) {
-  cv::VideoCapture camera;
-  camera.open(camera_number);
-  if (!camera.isOpened()) {
-    throw std::invalid_argument("camera is not ready or disconnect");
-    exit(1);
-  }
-  std::cout << "camera checked" << std::endl;
-}
-
 /* this function run forever, until machine is shutdown */
 void read_frame(void) {
   cv::VideoCapture camera;
@@ -151,35 +138,10 @@ int32_t contour_count(cv::Mat contoured) {
   int32_t image_array[20];
   for (int32_t& idx: image_array) {
     std::cout << "counting\n";
->>>>>>> 9dd1b97950bf206e5eb41069eafb287ef51688d1:main.cc
   }
   return 0;
 }
 
-<<<<<<< HEAD:crangc.cc
-/* 
- *   TODO:
- *   - daemonise this program into `crangd`
- *   - config to run on start up boot
- *   - waiting client to connect to socket UDS or TCP
- *   - 
- */
-
-int main(int argc, char** argv) {
-  // std::cout << "crangc" << GRN + VERSION + RST << "is starting up" << BLU + PLATFORM + RST<< std::endl;
-  // platform independent code
-  write(1, cam_error, strlen(cam_error));
-  std::ifstream ifs("cranconfig");
-  if (ifs.fail()) {
-    write(1, config_error, strlen(config_error));
-    exit(EXIT_FAILURE);
-  }
-  write(1, check_cam, strlen(check_cam));
-  /* read image from camera */
-  cv::Mat img_zero;
-  img_zero = cv::Mat::zeros(1, 1, CV_64F);
-  exit(1);
-=======
 /* main function */
 int main(void) {
   std::cout << "probing USB for avaliable camera...\n" << std::endl;
@@ -188,5 +150,4 @@ int main(void) {
   camera_usable();
   std::cout << "start reading frame from camera" << std::endl;
   return 0;
->>>>>>> 9dd1b97950bf206e5eb41069eafb287ef51688d1:main.cc
 }
