@@ -1,6 +1,18 @@
 #include "crangc.hh"
 
-int camera_number = 0;
+/* TODO: new architecture
+    - have 2 mode - cli and server
+                  | cli : output as file
+                  | server : start server and send image through UDS/TCP/UDP
+    - write history, setting, log to sqlite database
+    - config file - easiest way to adjust image processing pipeline
+    - buffer & multithread - performance-oriented for embed devices
+    - minimalism - required a few dependencies
+ */
+
+/* parameter */
+int   default_camera  = 0;
+char* camera_number   = 0;
 cv::Ptr<cv::BackgroundSubtractor> bg_subtractor;
 
 /* circle pipeline */
@@ -20,7 +32,6 @@ void circlepipe(cv::Mat inputimage) {
   }
   cv::imwrite("output.png", inputimage);
 }
-
 
 /* contour pipeline */
 void contourpipe(cv::Mat inputimage) {
@@ -58,12 +69,78 @@ void server_mode(void) {
   /* end timer block */
 } 
 
-int main(void) {
-  cv::Mat image = cv::imread("coins.jpg");
+void showversion(void) {
+  std::cout << "crangc - aquatic computer vision\n" 
+    << "build with OpenCV : " << CV_VERSION
+    << std::endl;
+}
+
+void help_mesg(void) {
+  std::cout << "Usage: ./crangon [options]\n"
+    << "\nOptions:\n"
+    << "  -h, --help           Show this help message and exit\n"
+    << "  -s, --serve            Run server mode\n"
+    << "  -t, --test             Perform self-test\n"
+    << "  -f <file>, --file <file>\n"
+    << "                       Specify input image\n"
+    << "  -v, --verbose        Enable verbose output\n"
+    << "  --version            Show program version\n"
+    << std::endl;
+}
+
+cv::Mat generateRandomCirclesImage(int width = 1280, int height = 720) {
+  cv::Mat image(height, width, CV_8UC3, cv::Scalar(0, 0, 0));
+  std::random_device rd;
+  std::mt19937 rng(rd());
+  std::uniform_int_distribution<int> numCirclesDist(10, 50); // Number of circles
+  std::uniform_int_distribution<int> radiusDist(10, 100);    // Radius of circles
+  std::uniform_int_distribution<int> xDist(0, width - 1);
+  std::uniform_int_distribution<int> yDist(0, height - 1);
+  std::uniform_int_distribution<int> colorDist(0, 255);
+
+  int numCircles = numCirclesDist(rng);
+  for (int i = 0; i < numCircles; ++i) {
+    cv::Point center(xDist(rng), yDist(rng));
+    int radius = radiusDist(rng);
+    cv::Scalar color(colorDist(rng), colorDist(rng), colorDist(rng)); // Random BGR color
+    cv::circle(image, center, radius, color, -1); // -1 means filled circle
+  }
+  return image;
+}
+
+void selftest(void) {
+  cv::Mat image = generateRandomCirclesImage();
   if (image.empty()) {
     spdlog::error("could not open image.");
-    return -1;
+    exit(-1);
   }
   circlepipe(image);
+  contourpipe(image);
+}
+
+void argcheck(char* args) {
+  std::string arg = args;
+  if (arg == "-h" || arg == "--help") {
+    help_mesg();
+  } if (arg == "-t" || arg == "--test") {
+    selftest();
+  } if (arg == "-f" || arg == "--file") {
+    help_mesg();
+  } if (arg == "-s" || arg == "--serve") {
+    server_mode();
+  } if (arg == "--version") {
+    showversion();
+  }
+}
+
+int main(int argc, char** argv) {
+  argc <= 1 ? help_mesg() : argcheck(argv[1]);
+  // cv::Mat image = cv::imread("coins.jpg");
+  // if (image.empty()) {
+  //   spdlog::error("could not open image.");
+  //   return -1;
+  // }
+  // circlepipe(image);
+  // contourpipe(image);
   return 0;
 }
