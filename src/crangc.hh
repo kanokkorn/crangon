@@ -11,6 +11,7 @@
 #include <fstream>
 #include <syslog.h>
 #include <functional>
+#include <random>
 
 /* time */
 #include <chrono>

@@ -11,11 +11,12 @@ set (
 )
 
 set (CMAKE_CXX_STANDARD 11)
+set(BUILD_SHARED_LIBS OFF)
 
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( crangc src/crangc.cc )
 target_link_libraries(
-    crangc 
+    crangc
     ${OpenCV_LIBS} 
     spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>
   )
