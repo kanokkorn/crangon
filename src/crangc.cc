@@ -1,71 +1,69 @@
 #include "crangc.hh"
-#include <opencv4/opencv2/core/cvstd_wrapper.hpp>
-#include <opencv4/opencv2/imgproc.hpp>
-#include <opencv4/opencv2/video/background_segm.hpp>
 
 int camera_number = 0;
 cv::Ptr<cv::BackgroundSubtractor> bg_subtractor;
 
-/* checking USB with `lsusb` might not work with *BSD */
-std::string camera_avalible(void) {
-  char buf_size[256];
-  std::string result = "";
-  FILE *pipe = popen("lsusb", "r");
-  if (!pipe) throw std::runtime_error("camera can't be check");
-  try {
-    while (fgets(buf_size, sizeof buf_size, pipe) != NULL) {
-      result += buf_size;
+/* circle pipeline */
+void circlepipe(cv::Mat inputimage) {
+  cv::Mat gray;
+  cv::cvtColor(inputimage, gray, cv::COLOR_BGR2GRAY);
+  cv::Mat blurred;
+  cv::GaussianBlur(gray, blurred, cv::Size(9, 9), 2, 2);
+  std::vector<cv::Vec3f> circles;
+  cv::HoughCircles(blurred, circles, cv::HOUGH_GRADIENT, 1, blurred.rows / 8, 200, 100, 0, 0);
+  for (size_t i = 0; i < circles.size(); i++) {
+    cv::Vec3f c = circles[i];
+    cv::Point center(cvRound(c[0]), cvRound(c[1]));
+    int radius = cvRound(c[2]);
+    circle(inputimage, center, 3, cv::Scalar(0, 255, 0), -1);
+    circle(inputimage, center, radius, cv::Scalar(0, 0, 255), 2);
+  }
+  cv::imwrite("output.png", inputimage);
+}
+
+
+/* contour pipeline */
+void contourpipe(cv::Mat inputimage) {
+  cv::Mat gray;
+  cv::cvtColor(inputimage, gray, cv::COLOR_BGR2GRAY);
+  cv::GaussianBlur(gray, gray, cv::Size(3, 3), 0);
+  cv::Mat thresholded;
+  cv::threshold(gray, thresholded, 0, 255, cv::THRESH_BINARY);
+  std::vector<std::vector<cv::Point>> contours;
+  cv::findContours(thresholded, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+  for (size_t i = 0; i < contours.size(); i++) {
+    double area = contourArea(contours[i]);
+    double radius = sqrt(area / CV_PI);
+    if (radius < 100) {
+      drawContours(inputimage, contours, (int)i, cv::Scalar(0, 255, 0), 2);
     }
-  } catch (...) {
-    pclose(pipe);
-    throw;
   }
-  pclose(pipe);
-  return result;
-}
+  cv::imwrite("output.png", inputimage);
+} 
 
-/* this function run forever, until machine is shutdown */
-void read_frame(void) {
-  cv::VideoCapture camera;
-  camera.open(camera_number);
-  while (true) {
-    std::cout << "run forever til shutdown" << std::endl;
-  }
-}
+void server_mode(void) {
+  /* start timer block */
+  auto start = std::chrono::system_clock::now();
+  std::time_t start_time = std::chrono::system_clock::to_time_t(start);
+  spdlog::info("crangd daemon start @ {}", std::ctime(&start_time));
+  spdlog::info("checking for connected camera(s)...");
+  /* start timer block */
 
-/* Pre-processing before do contour
- * ported from old project, not test yet
- */
-cv::Mat pre_process(cv::Mat raw_image) {
-  cv::Mat processed, greyed, filtered, blured;
-  cv::cvtColor(raw_image, greyed, cv::COLOR_RGB2GRAY);
-  cv::GaussianBlur(greyed, blured, cv::Size(SI_KERNEL, SI_KERNEL), BLUR_SIGMA);
-  cv::Canny(blured, processed, LOW_THRESH, LOW_THRESH*THRESH_RATIO, THRESH_KERNEL);
-  return processed;
-}
+  /* end timer block */
+  auto end = std::chrono::system_clock::now();
+  std::chrono::duration<double> elapsed_seconds = end-start;
+  spdlog::critical("daemon reached the of the line, please reboot the system");
+  spdlog::critical("crangd has been running for {:03.2f}s since {}", 
+      elapsed_seconds.count(), std::ctime(&start_time));
+  /* end timer block */
+} 
 
-cv::Mat contour_draw(cv::Mat processed) {
-  cv::Mat contoured = processed;
-  return contoured;
-}
-
-/* 
- * counting contour using c++11 feature set
- * counting length of array element
- */
-int32_t contour_count(cv::Mat contoured) {
-  int32_t image_array[20];
-  for (int32_t& idx: image_array) {
-    std::cout << "counting\n";
-  }
-  return 0;
-}
-
-/* main function */
 int main(void) {
-  std::cout << "probing USB for avaliable camera...\n" << std::endl;
-  std::cout << camera_avalible() << std::endl;
-  camera_avalible();
-  std::cout << "start reading frame from camera" << std::endl;
+  cv::Mat image = cv::imread("coins.jpg");
+  if (image.empty()) {
+    spdlog::error("could not open image.");
+    return -1;
+  }
+  circlepipe(image);
   return 0;
 }
