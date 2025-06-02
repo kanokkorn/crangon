@@ -2,9 +2,9 @@
 
 ## Description
 
-Experimental counter and analyzer aquaculture animals with computer vision and machine learning assisted for minimizing error from human and maximizing the accuracy of counting
+Experiment program for counting very small aquatic animal that moving in water flume
 
-This project was designed to be a background process and needed a front-end application [cragui](https://github.com) to be fully functional
+This project is a background process, it is needed a front-end application [cvmui](https://github.com) to be interactive
 
 ![experiment](https://i.imgur.com/pyDZTjF.gif)
 
@@ -14,35 +14,35 @@ This project was designed to be a background process and needed a front-end appl
 ## Goals
 ---
 
-- image processing time <50ms per frame without sacrifice accuracy
-- minimal memory footprint enough for embedded
-- extensible with front-end through UDS & TCP
-- fast & secure local storage
-- works well with BSD Unix or Linux with musl & glibc
+- Precision counting very small aquatic animal like baby prawn, Juvenile fish and such
+- Achieve +90% counting accuracy at water flow speed of 4 gallons per minute (gpm)
 
 ## Prerequisite
 
 - OpenCV4
 - CMake
 - sqlite3
+- spdlog
 
 ### Debian required packages
 
 ```bash
-sudo apt install libopencv-dev libsqlite3-dev cmake
+sudo apt install cmake libopencv-dev libsqlite3-dev libspdlog-dev 
 ```
 
 ### FreeBSD required packages
 
 ```sh
-sudo pkg install opencv libsqlite3-dev cmake
+sudo pkg install opencv libspdlog libsqlite3-dev cmake
 ```
 
 ### Thought
 ---
 
-- consider alternative computer vision frameworks like `ccv`
-- rewrite in c language for portability
+- simple CLI program - can be used without display
+- configure file - modified image processing pipeline without recompile whole program
+- server-client architecture - this approach make GUI development more flexible
+- built-in database - result are save in local database
 
 ### Current project status
 ---
