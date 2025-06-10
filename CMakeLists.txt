@@ -18,11 +18,11 @@ FetchContent_Declare(
   CMAKE_ARGS -DSPDLOG_FMT_EXTERNAL=ON
 )
 
-if(NOT spdlog_POPULATED)
-  FetchContent_MakeAvailable(spdlog)
-  # Add spdlog as a subdirectory to make its targets available
-  add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
-endif()
+# if(NOT spdlog_POPULATED)
+#   FetchContent_MakeAvailable(spdlog)
+#   # Add spdlog as a subdirectory to make its targets available
+#   add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
+# endif()
 
 find_package( OpenCV REQUIRED )
 find_package( spdlog REQUIRED )
