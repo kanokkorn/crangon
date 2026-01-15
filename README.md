@@ -2,57 +2,55 @@
 
 ## Description
 
-Experiment program for counting very small aquatic animal that moving in water flume
-
-This project is a background process, it is needed a front-end application [cvmui](https://github.com) to be interactive
+Crangon is an experimental program for counting small aquatic animals moving in a water flume. It is designed to run as a background process and can be paired with a front-end application like [cvmui](https://github.com) for interactive use.
 
 ![experiment](https://i.imgur.com/pyDZTjF.gif)
 
-> a short demo of progression in small prawn counter running on Nvidia Jetson Nano
-
+> A short demo of the prawn counter running on an Nvidia Jetson Nano.
 
 ## Goals
----
 
-- Precision counting very small aquatic animal like baby prawn, Juvenile fish and such
-- Achieve +90% counting accuracy at water flow speed of 4 gallons per minute (gpm)
+- Precisely count small aquatic animals, such as baby prawns and juvenile fish.
+- Achieve over 90% counting accuracy at a water flow speed of 4 gallons per minute (GPM).
 
-## Prerequisite
+## Features
 
-- OpenCV4
-- CMake
-- sqlite3
+- **CLI-based:** Can be operated in a headless environment.
+- **Configurable:** The image processing pipeline can be adjusted without recompiling.
+- **Client-Server Architecture:** A flexible design that allows for various GUI implementations.
+- **Built-in Database:** Results are stored locally in a SQLite database.
+
+## Prerequisites
+
+- A C++17 compliant compiler
+- CMake 3.14 or later
+
+All other dependencies are managed automatically by CMake's `FetchContent` feature, including:
+
+- OpenCV
 - spdlog
+- sqlite3
 
-### Debian required packages
+## Building
+
+To build the project, follow these steps:
 
 ```bash
-sudo apt install cmake libopencv-dev libsqlite3-dev libspdlog-dev 
+git clone https://github.com/kanokkorn/crangon.git
+cd crangon
+mkdir build && cd build
+cmake ..
+make
 ```
 
-### FreeBSD required packages
+## Current Project Status
 
-```sh
-sudo pkg install opencv libspdlog libsqlite3-dev cmake
-```
-
-### Thought
----
-
-- simple CLI program - can be used without display
-- configure file - modified image processing pipeline without recompile whole program
-- server-client architecture - this approach make GUI development more flexible
-- built-in database - result are save in local database
-
-### Current project status
----
-
-[ ] reimplement image processing pipeline from previous project.
-[ ] add an additional functionally 
-[ ] check and test FreeBSD compatibility with target hardware.
-[ ] build and test project against FreeBSD version of libraries.
+- [x] Refactor the build system to use CMake's `FetchContent`.
+- [x] Restructure the project to separate components.
+- [ ] Re-implement the image processing pipeline.
+- [ ] Add new functionalities.
+- [ ] Test FreeBSD compatibility.
 
 ## License
----
 
-See [LICENSE](https://github.com/kanokkorn/crangon/blob/main/LICENSE)
+This project is licensed under the terms of the [LICENSE](https://github.com/kanokkorn/crangon/blob/main/LICENSE) file.

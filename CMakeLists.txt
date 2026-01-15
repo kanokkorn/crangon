@@ -1,45 +1,53 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
-project( crangon )
+project(crangon)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
 FetchContent_Declare(
   spdlog
-  GIT_REPOSITORY https://github.com/gabime/spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog.git
   GIT_TAG        v1.13.0
-  CMAKE_ARGS -DSPDLOG_FMT_EXTERNAL=ON
 )
 
 FetchContent_Declare(
-  OpenCV
-  GIT_REPOSITORY https://github.com/opencv/opencv
-  GIT_TAG        dad8af6b17f8e60d7b95a1203a1b4d22f56574cf
-  CMAKE_ARGS -DSPDLOG_FMT_EXTERNAL=ON
+  opencv
+  GIT_REPOSITORY https://github.com/opencv/opencv.git
+  GIT_TAG        4.9.0
+  CMAKE_ARGS     -DWITH_IPP=OFF -DWITH_ITT=OFF -DBUILD_IPP=OFF -DBUILD_ITT=OFF
 )
 
-# if(NOT spdlog_POPULATED)
-#   FetchContent_MakeAvailable(spdlog)
-#   # Add spdlog as a subdirectory to make its targets available
-#   add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
-# endif()
-
-find_package( OpenCV REQUIRED )
-find_package( spdlog REQUIRED )
-
-set (
-    SOURCE_FILES
-    src/crangc.cc
+FetchContent_Declare(
+  sqlite3
+  URL https://www.sqlite.org/2024/sqlite-amalgamation-3450000.zip
+  DOWNLOAD_EXTRACT_TIMESTAMP true
 )
 
-set (CMAKE_CXX_STANDARD 11)
-set (BUILD_SHARED_LIBS OFF)
+FetchContent_MakeAvailable(spdlog opencv sqlite3)
 
-include_directories( ${OpenCV_INCLUDE_DIRS} )
-include_directories( ${spdlog_INCLUDE_DIRS} )
-add_executable( crangc src/crangc.cc )
-target_link_libraries(
-    crangc
-    ${OpenCV_LIBS} 
-    spdlog::spdlog $<$<BOOL:${MINGW}>:ws2_32>
-  )
+add_library(sqlite INTERFACE)
+target_sources(sqlite INTERFACE ${sqlite3_SOURCE_DIR}/sqlite3.c)
+target_include_directories(sqlite INTERFACE ${sqlite3_SOURCE_DIR})
+
+add_executable(crangon
+  src/main.cc
+  src/vision/crangc.cc
+  src/database/sqldb.cc
+  src/hw/hw_check.cc
+)
+
+target_include_directories(crangon PRIVATE
+  "${PROJECT_SOURCE_DIR}/src"
+  "${sqlite3_SOURCE_DIR}"
+)
+
+target_link_libraries(crangon PRIVATE
+  spdlog::spdlog
+  opencv_core
+  opencv_imgproc
+  opencv_highgui
+  sqlite
+)
